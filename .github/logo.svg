@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="350" height="70" role="img" aria-label="cla(-lin)ker">
-  <title>cla(-lin)ker</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="70" role="img" aria-label="cla(-li)nker">
+  <title>cla(-li)nker</title>
   <text x="10" y="52" font-family="ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace" font-size="48" font-weight="700" letter-spacing="-1">
-    <tspan fill="#1a1a1a">cla</tspan><tspan fill="#888888">(-lin)</tspan><tspan fill="#1a1a1a">ker</tspan>
+    <tspan fill="#1a1a1a">cla</tspan><tspan fill="#888888">(-li)</tspan><tspan fill="#1a1a1a">nker</tspan>
   </text>
 </svg>
