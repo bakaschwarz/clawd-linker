@@ -10,10 +10,10 @@ interface RawConfig {
   repoPath?: unknown;
 }
 
-export async function getRepoPath(): Promise<string> {
+export async function getRepoPath(configPath = CONFIG_PATH): Promise<string> {
   let raw: RawConfig;
   try {
-    const content = await readFile(CONFIG_PATH, 'utf8');
+    const content = await readFile(configPath, 'utf8');
     raw = JSON.parse(content) as RawConfig;
   } catch {
     console.error(chalk.red('No package repository configured. Run `clawd-linker init` first.'));
@@ -47,10 +47,10 @@ export async function getRepoPath(): Promise<string> {
   return repoPath;
 }
 
-export async function setRepoPath(repoPath: string): Promise<void> {
+export async function setRepoPath(repoPath: string, configPath = CONFIG_PATH): Promise<void> {
   const resolved = path.resolve(repoPath);
   const data = JSON.stringify({ schemaVersion: 1, repoPath: resolved }, null, 2);
-  const tmp = CONFIG_PATH + '.tmp';
+  const tmp = configPath + '.tmp';
   await writeFile(tmp, data, 'utf8');
-  await rename(tmp, CONFIG_PATH);
+  await rename(tmp, configPath);
 }
