@@ -42,7 +42,14 @@ export async function installPackage(pkg, projectPath, conflictCallback) {
       const action = await conflictCallback(target);
       if (action === 'skip') continue;
       // Backup before overwrite — Pitfall 7 prevention
-      await rename(target, target + '.clawd-backup');
+      // WR-01: avoid clobbering an existing backup with a timestamped name
+      const backupPath = target + '.clawd-backup';
+      const backupStat = await lstat(backupPath).catch(() => null);
+      if (backupStat) {
+        await rename(target, `${target}.clawd-backup-${Date.now()}`);
+      } else {
+        await rename(target, backupPath);
+      }
     }
 
     await symlink(source, target);
@@ -50,8 +57,13 @@ export async function installPackage(pkg, projectPath, conflictCallback) {
   }
 
   // Update data.json with owned symlinks
+  // WR-04: merge with previously recorded links so stale paths (source file deleted)
+  // are retained and can be cleaned up by uninstallPackage rather than leaking.
   const state = await readState(pkg.dataJsonPath);
-  state.installedIn[projectPath] = ownedLinks;
+  const previousLinks = state.installedIn[projectPath] || [];
+  const currentSet = new Set(ownedLinks);
+  const merged = [...ownedLinks, ...previousLinks.filter(p => !currentSet.has(p))];
+  state.installedIn[projectPath] = merged;
   await writeState(pkg.dataJsonPath, state);
 
   return ownedLinks;
