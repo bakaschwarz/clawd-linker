@@ -30,10 +30,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. Running `manage` twice with the same selection is a no-op; when a real file exists at a symlink target the user is prompted per-conflict to skip or overwrite
 **Plans:** 4 plans
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffold, fs-utils boundary module, and global config
-- [ ] 01-02-PLAN.md — Core services: package-registry, package-state, symlink-manager
-- [ ] 01-03-PLAN.md — CLI commands (init, new, manage) and commander wiring
-- [ ] 01-04-PLAN.md — End-to-end verification checkpoint
+- [x] 01-01-PLAN.md — Project scaffold, fs-utils boundary module, and global config
+- [x] 01-02-PLAN.md — Core services: package-registry, package-state, symlink-manager
+- [x] 01-03-PLAN.md — CLI commands (init, new, manage) and commander wiring
+- [x] 01-04-PLAN.md — End-to-end verification checkpoint
 
 ### Phase 2: Robustness + Polish
 **Goal**: The tool handles edge cases gracefully, supports scripted use, and cleans up after itself
