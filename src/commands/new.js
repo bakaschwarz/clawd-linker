@@ -19,6 +19,13 @@ export async function newCommand(name) {
   }
 
   const repoPath = await getRepoPath(); // Exits if not configured (CFG-02)
+
+  // Security: prevent path traversal — CR-01
+  if (name.includes('/') || name.includes('\\') || name.includes('..')) {
+    console.error(chalk.red(`Package name must not contain path separators or ".."`));
+    process.exit(1);
+  }
+
   const pkgPath = path.join(repoPath, name);
   const filesPath = path.join(pkgPath, 'files');
 
