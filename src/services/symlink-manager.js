@@ -134,9 +134,11 @@ export async function uninstallPackage(pkg, projectPath, { dryRun = false } = {}
  */
 export async function cleanEmptyDirs(removedPaths, projectPath) {
   const dirs = new Set();
+  // Append separator so sibling dirs (e.g. /proj-backup) are not matched as sub-paths
+  const projectRoot = projectPath.endsWith(path.sep) ? projectPath : projectPath + path.sep;
   for (const p of removedPaths) {
     let dir = path.dirname(p);
-    while (dir !== projectPath && dir.startsWith(projectPath)) {
+    while (dir !== projectPath && dir.startsWith(projectRoot)) {
       dirs.add(dir);
       dir = path.dirname(dir);
     }
