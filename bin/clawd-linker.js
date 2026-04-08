@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 
+import { createRequire } from 'module';
 import { program } from 'commander';
 import { initCommand } from '../src/commands/init.js';
 import { newCommand } from '../src/commands/new.js';
 import { manageCommand } from '../src/commands/manage.js';
 import { listCommand } from '../src/commands/list.js';
 
+const require = createRequire(import.meta.url);
+const { version } = require('../package.json');
+
 program
   .name('clawd-linker')
   .description('Manage reusable file packages across projects via symlinks')
-  .version('0.1.0');
+  .version(version);
 
 program
   .command('init')
