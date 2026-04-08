@@ -80,6 +80,13 @@ export async function reconcileLinks(pkg, projectPath) {
 
   for (const linkPath of recordedLinks) {
     const relPath = path.relative(projectPath, linkPath);
+
+    // Guard: linkPath escapes projectPath — treat as stale and prune
+    if (relPath.startsWith('..')) {
+      changed = true;
+      continue;
+    }
+
     const expectedSource = path.resolve(pkg.filesPath, relPath);
 
     const stat = await lstat(linkPath).catch(() => null);
