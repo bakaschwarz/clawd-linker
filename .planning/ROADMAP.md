@@ -45,7 +45,10 @@ Plans:
   3. On `manage` startup, stale `data.json` entries are cross-validated against the live filesystem and auto-repaired before the TUI renders
   4. User can run `npx clawd-linker list` to see installed packages without opening the TUI
   5. Tool runs non-interactively (via `--yes` flag or non-TTY detection) for scripted use
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 02-01-PLAN.md — Dry-run flag, empty directory cleanup, headless mode
+- [ ] 02-02-PLAN.md — Stale state reconciliation, list command, schema version guards
 
 ### Phase 3: Testing + Distribution
 **Goal**: The tool is tested against its critical correctness properties and published to npm for `npx` consumption
@@ -55,7 +58,10 @@ Plans:
   1. Unit tests cover `symlink-manager`, `package-state`, and `package-registry` with mocked fs calls
   2. Integration tests cover: two packages sharing a subdirectory; stale `data.json` reconciliation; idempotent re-run of `manage`
   3. `npx clawd-linker@latest` works on a clean machine with Node >= 20 installed
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 02-01-PLAN.md — Dry-run flag, empty directory cleanup, headless mode
+- [ ] 02-02-PLAN.md — Stale state reconciliation, list command, schema version guards
 
 ## Progress
 
