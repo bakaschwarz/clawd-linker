@@ -390,17 +390,19 @@ if (dryRun) {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Headless `manage` behavior with `--yes`**
    - What we know: `--yes` signals "skip confirmation prompts"
    - What's unclear: In headless mode with `--yes`, what is the "selection"? The currently-installed set (no-op)? All packages? Or only packages explicitly named?
    - Recommendation: Default to current installed set (no-op) — safest. If caller wants to install, they use `--yes` after specifying packages some other way (future scope). Document this behavior clearly.
+   - **RESOLVED:** Headless mode (`--yes` or non-TTY) exits early with an informational no-op message. No install/uninstall occurs without TUI interaction. (Plan 02-01, Task 2)
 
 2. **Reconciliation: prune vs. auto-reinstall stale links**
    - What we know: ROB-03 says "auto-repair stale state"
    - What's unclear: "auto-repair" = (a) prune stale entries from `data.json` so TUI shows correct state, or (b) attempt to re-create missing symlinks automatically
    - Recommendation: Interpretation (a) — prune `data.json` to match reality, then let the TUI let the user choose. Re-creating symlinks automatically without user input violates the "no silent installs" principle. The success criteria says "cross-validated against the live filesystem and auto-repaired before the TUI renders" which supports (a).
+   - **RESOLVED:** Prune-only (interpretation a). `reconcileLinks` removes stale `data.json` entries for links that are missing, wrong-target, or not a symlink. Does not re-create missing symlinks. (Plan 02-02, Task 1)
 
 ---
 
