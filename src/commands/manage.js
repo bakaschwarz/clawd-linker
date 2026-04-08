@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import { checkbox, confirm as inquirerConfirm } from '@inquirer/prompts';
 import { getRepoPath } from '../config.js';
 import { listPackages } from '../services/package-registry.js';
-import { getInstalledPackages } from '../services/package-state.js';
+import { getInstalledPackages, reconcileLinks } from '../services/package-state.js';
 import { installPackage, uninstallPackage, cleanEmptyDirs } from '../services/symlink-manager.js';
 
 /**
@@ -27,6 +27,16 @@ export async function manageCommand(options) {
     console.log(chalk.yellow('No packages found in the repository.'));
     console.log(`Create one with: ${chalk.cyan('clawd-linker new <name>')}`);
     return;
+  }
+
+  // ROB-03: Cross-validate data.json entries against live filesystem
+  let totalPruned = 0;
+  for (const pkg of packages) {
+    const { pruned } = await reconcileLinks(pkg, projectPath);
+    totalPruned += pruned;
+  }
+  if (totalPruned > 0) {
+    console.log(chalk.yellow(`Reconciled state: ${totalPruned} stale symlink(s) pruned from data.json.\n`));
   }
 
   if (dryRun) {
