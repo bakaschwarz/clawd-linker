@@ -1,6 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="350" height="70" role="img" aria-label="cla(-li)nker">
   <title>cla(-li)nker</title>
+  <style>
+    .main { fill: #1a1a1a; }
+    .muted { fill: #888888; }
+    @media (prefers-color-scheme: dark) {
+      .main { fill: #e6e6e6; }
+    }
+  </style>
   <text x="10" y="52" font-family="ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace" font-size="48" font-weight="700" letter-spacing="-1">
-    <tspan fill="#1a1a1a">cla</tspan><tspan fill="#888888">(-li)</tspan><tspan fill="#1a1a1a">nker</tspan>
+    <tspan class="main">cla</tspan><tspan class="muted">(-li)</tspan><tspan class="main">nker</tspan>
   </text>
 </svg>
