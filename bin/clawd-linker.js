@@ -4,6 +4,7 @@ import { program } from 'commander';
 import { initCommand } from '../src/commands/init.js';
 import { newCommand } from '../src/commands/new.js';
 import { manageCommand } from '../src/commands/manage.js';
+import { listCommand } from '../src/commands/list.js';
 
 program
   .name('clawd-linker')
@@ -27,5 +28,11 @@ program
   .option('--dry-run', 'Preview changes without making any filesystem changes')
   .option('-y, --yes', 'Skip confirmation prompts (headless/scripted use)')
   .action(manageCommand);
+
+program
+  .command('list')
+  .alias('ls')
+  .description('Show installed packages for this project')
+  .action(listCommand);
 
 program.parse();

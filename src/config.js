@@ -22,6 +22,12 @@ export async function getRepoPath() {
     process.exit(1);
   }
 
+  if (raw.schemaVersion && raw.schemaVersion > 1) {
+    console.warn(chalk.yellow(
+      `Warning: config uses schema version ${raw.schemaVersion} (this tool supports version 1). Some settings may not be handled correctly.`
+    ));
+  }
+
   if (!raw.repoPath || typeof raw.repoPath !== 'string') {
     console.error(chalk.red('Config file is missing repoPath. Run `clawd-linker init` to reconfigure.'));
     process.exit(1);
