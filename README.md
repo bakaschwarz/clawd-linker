@@ -1,4 +1,4 @@
-<img src=".github/logo.svg" alt="cla(-lin)ker" />
+<img src="https://raw.githubusercontent.com/bakaschwarz/clawd-linker/main/.github/logo.svg" alt="cla(-lin)ker" />
 
 Pull your skills, agents, rules, docs, etc. from a central repository and link them as packages into your projects as symlinks.
 
