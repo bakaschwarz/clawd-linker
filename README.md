@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/bakaschwarz/cla-linker/main/.github/logo.svg" alt="cla(-lin)ker" />
 
-Pull your skills, agents, rules, docs, etc. from a central repository and link them as packages into your projects as symlinks.
+Pull your skills, agents, rules, docs, etc. from a central repository and link them into your projects as symlinks — or merge Markdown files across packages into a single, editable file.
 
 ## Motivation
 
@@ -46,7 +46,7 @@ npx cla-linker new my-package
 ```
 
 Scaffolds `<repo>/<name>/` with:
-- `files/` — place the files you want symlinked into projects here
+- `files/` — place the files you want linked into projects here (non-Markdown files are symlinked; `.md` files are merged)
 - `PACKAGE.md` — package description
 - `data.json` — install state (git-ignored)
 
@@ -63,6 +63,8 @@ Opens a checkbox list of all packages. Toggle with Space, confirm with Enter. Al
 **Load order:** when 2 or more packages are selected, a reorder prompt appears. Use ↑↓ to navigate, `1` to move an item up, `2` to move it down, Enter to confirm. Packages at the top of the list are applied last and take precedence when files conflict. The order is saved and restored on future runs.
 
 **Conflict handling:** if a file already exists at a symlink target, you're prompted per-file whether to overwrite (original is backed up with a timestamp suffix) or skip.
+
+**Markdown merging:** `.md` files are not symlinked — instead, their content is merged from all selected packages into a single real file in your project. Package content appears above a `<!-- ===== USER CONTENT - SAFE TO EDIT BELOW ===== -->` marker; anything you write below that line is preserved across reinstalls. When multiple packages contribute to the same `.md` file, they're concatenated in package-list order (top package first). When you deselect all packages that contributed to a merged file: if you've added content below the marker it's kept as a plain file; if the section is empty the file is deleted.
 
 ## Config
 
