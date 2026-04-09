@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/bakaschwarz/cla-linker/compare/v1.4.0...v1.5.0) (2026-04-09)
+
+
+### Features
+
+* **clawd-linker-c2o:** add ignore/ig command to update .gitignore with package files ([a67034e](https://github.com/bakaschwarz/cla-linker/commit/a67034ef5d1cf995e46b0e5468fbc9398d0760e9))
+
 # [1.4.0](https://github.com/bakaschwarz/cla-linker/compare/v1.3.0...v1.4.0) (2026-04-09)
 
 
