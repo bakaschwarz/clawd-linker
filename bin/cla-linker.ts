@@ -5,6 +5,7 @@ import { initCommand } from '../src/commands/init.js';
 import { newCommand } from '../src/commands/new.js';
 import { manageCommand } from '../src/commands/manage.js';
 import { listCommand } from '../src/commands/list.js';
+import { syncCommand } from '../src/commands/sync.js';
 import packageJson from '../package.json' with { type: 'json' };
 
 program
@@ -35,5 +36,13 @@ program
   .alias('ls')
   .description('Show installed packages for this project')
   .action(listCommand);
+
+program
+  .command('sync')
+  .alias('s')
+  .description('Update installed packages with the latest content from the central repo')
+  .option('-g, --global', 'Sync all registered projects (default: current directory only)')
+  .option('--watch', 'Watch for changes and sync automatically')
+  .action(syncCommand);
 
 program.parse();
