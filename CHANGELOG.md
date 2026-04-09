@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/bakaschwarz/cla-linker/compare/v1.2.0...v1.3.0) (2026-04-09)
+
+
+### Features
+
+* **manage:** implement content merging for Markdown files ([66f3b67](https://github.com/bakaschwarz/cla-linker/commit/66f3b676aacf7e11ee82516cba8c701d8d144673))
+
 # [1.2.0](https://github.com/bakaschwarz/cla-linker/compare/v1.1.0...v1.2.0) (2026-04-09)
 
 
