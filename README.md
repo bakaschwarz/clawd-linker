@@ -7,9 +7,12 @@ Pull your skills, agents, rules, docs, etc. from a central repository and link t
 I made this tool since i could not find a good way to add knowledge and files to multiple projects using AI agents without information rot beginning almost immediately.
 Updating a change in my sub-agent in multiple projects with the same structure quickly became a nightmare to manage.
 At first, i sym-linked some files manually, but thought there must be a better way.
+
 Enter `cla-linker`.
+
 This tool allows me to manage knowledge at a central space and link as many files and directories as needed into my projects, with no assumption on structure.
 So not only can i share the exact same docs across many projects, i can also share my agents, rules, etc.
+
 Because of the nature of this tool, i am also able to use it with basically any agent harness, which is a plus in a world where the *best* tool changes almost every week.
 
 ## Requirements
