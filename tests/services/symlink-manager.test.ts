@@ -114,6 +114,24 @@ describe('installPackage', () => {
     expect(state.installedIn[projectDir]).toContain(join(projectDir, 'g.ts'));
   });
 
+  it('skips mergeable (.md) files — leaves no symlink and no state entry', async () => {
+    await writeFile(join(pkg.filesPath, 'README.md'), '# hello', 'utf8');
+    await writeFile(join(pkg.filesPath, 'a.ts'), '', 'utf8');
+
+    const links = await installPackage(pkg, projectDir, noConflict);
+
+    // .md file must not appear as a symlink
+    const mdStat = await lstat(join(projectDir, 'README.md')).catch(() => null);
+    expect(mdStat).toBeNull();
+
+    // .ts file is still linked
+    expect(links).toContain(join(projectDir, 'a.ts'));
+
+    // data.json must not contain the .md path
+    const state = await readState(pkg.dataJsonPath);
+    expect(state.installedIn[projectDir]).not.toContain(join(projectDir, 'README.md'));
+  });
+
   it('with dryRun: true does not create symlinks or modify state', async () => {
     await writeFile(join(pkg.filesPath, 'h.ts'), '', 'utf8');
 

@@ -5,6 +5,7 @@ import { getRepoPath } from '../config.js';
 import { listPackages } from '../services/package-registry.js';
 import { getInstalledPackages, getOrderedInstalledPackages, setPackageOrder, reconcileLinks } from '../services/package-state.js';
 import { installPackage, uninstallPackage, cleanEmptyDirs } from '../services/symlink-manager.js';
+import { mergeAll } from '../services/merge-manager.js';
 import { reorderPrompt } from '../prompts/reorder.js';
 import type { ManageOptions, ConflictCallback, Package } from '../types.js';
 
@@ -145,13 +146,12 @@ export async function manageCommand(options: ManageOptions): Promise<void> {
 
   // ORD-03: Install ALL selected packages in order (bottom→top) so conflict resolution
   // reflects the final priority stack. installPackage is idempotent for correct symlinks.
+  const symlinkCounts = new Map<string, number>();
   for (let i = 0; i < finalOrderedPkgs.length; i++) {
     const pkg = finalOrderedPkgs[i];
     try {
       const links = await installPackage(pkg, projectPath, conflictCallback, { dryRun });
-      if (toInstall.some(p => p.name === pkg.name)) {
-        console.log(chalk.green(`  Installed ${pkg.name} (${links.length} files)`));
-      }
+      symlinkCounts.set(pkg.name, links.length);
       if (!dryRun) {
         await setPackageOrder(pkg, projectPath, i);
       }
@@ -159,6 +159,16 @@ export async function manageCommand(options: ManageOptions): Promise<void> {
       errors.push({ pkg: pkg.name, err: err as Error });
       console.log(chalk.red(`  Failed to install ${pkg.name}: ${(err as Error).message}`));
     }
+  }
+
+  // Merge mergeable files (e.g. .md) across all selected packages
+  const prevInstalledPkgs = packages.filter(pkg => installed.has(pkg.name));
+  const mergedCounts = await mergeAll(finalOrderedPkgs, prevInstalledPkgs, projectPath, { dryRun });
+
+  // Log installs with accurate total file count (symlinks + merged files)
+  for (const pkg of toInstall) {
+    const total = (symlinkCounts.get(pkg.name) ?? 0) + (mergedCounts.get(pkg.name) ?? 0);
+    console.log(chalk.green(`  Installed ${pkg.name} (${total} files)`));
   }
 
   if (errors.length > 0) {

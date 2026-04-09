@@ -3,6 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import { walkFiles } from '../utils/fs.js';
 import { readState, writeState } from './package-state.js';
+import { isMergeable } from './merge-manager.js';
 import type { Package, ConflictCallback, InstallOptions } from '../types.js';
 
 export async function installPackage(
@@ -15,6 +16,9 @@ export async function installPackage(
   const ownedLinks: string[] = [];
 
   for (const relPath of files) {
+    // Mergeable files (e.g. .md) are handled by merge-manager — skip symlink creation
+    if (isMergeable(relPath)) continue;
+
     const source = path.resolve(pkg.filesPath, relPath);   // absolute — LINK-02
     const target = path.resolve(projectPath, relPath);      // absolute — LINK-02
 
@@ -106,6 +110,9 @@ export async function uninstallPackage(
     delete state.installedIn[projectPath];
     if (state.orderIn) {
       delete state.orderIn[projectPath];
+    }
+    if (state.mergedIn) {
+      delete state.mergedIn[projectPath];
     }
     await writeState(pkg.dataJsonPath, state);
   }

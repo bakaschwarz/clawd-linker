@@ -32,8 +32,9 @@ export async function getOrderedInstalledPackages(projectPath: string, packages:
   const withOrder: Array<{ pkg: Package; order: number }> = [];
   for (const pkg of packages) {
     const state = await readState(pkg.dataJsonPath);
-    const projectLinks = state.installedIn[projectPath];
-    if (projectLinks && projectLinks.length > 0) {
+    const hasSymlinks = (state.installedIn[projectPath]?.length ?? 0) > 0;
+    const hasMerged = (state.mergedIn?.[projectPath]?.length ?? 0) > 0;
+    if (hasSymlinks || hasMerged) {
       withOrder.push({ pkg, order: state.orderIn?.[projectPath] ?? Infinity });
     }
   }
@@ -52,8 +53,9 @@ export async function getInstalledPackages(projectPath: string, packages: Packag
   const installed = new Set<string>();
   for (const pkg of packages) {
     const state = await readState(pkg.dataJsonPath);
-    const projectLinks = state.installedIn[projectPath];
-    if (projectLinks && projectLinks.length > 0) {
+    const hasSymlinks = (state.installedIn[projectPath]?.length ?? 0) > 0;
+    const hasMerged = (state.mergedIn?.[projectPath]?.length ?? 0) > 0;
+    if (hasSymlinks || hasMerged) {
       installed.add(pkg.name);
     }
   }
@@ -114,6 +116,30 @@ export async function reconcileLinks(pkg: Package, projectPath: string): Promise
       state.installedIn[projectPath] = verified;
     }
     await writeState(pkg.dataJsonPath, state);
+  }
+
+  // Reconcile mergedIn: prune entries where the target file no longer exists
+  const recordedMerged = state.mergedIn?.[projectPath];
+  if (recordedMerged && recordedMerged.length > 0) {
+    const verifiedMerged: string[] = [];
+    let mergedChanged = false;
+    for (const filePath of recordedMerged) {
+      const stat = await lstat(filePath).catch(() => null);
+      if (stat && stat.isFile()) {
+        verifiedMerged.push(filePath);
+      } else {
+        mergedChanged = true;
+      }
+    }
+    if (mergedChanged) {
+      state.mergedIn = state.mergedIn ?? {};
+      if (verifiedMerged.length === 0) {
+        delete state.mergedIn[projectPath];
+      } else {
+        state.mergedIn[projectPath] = verifiedMerged;
+      }
+      await writeState(pkg.dataJsonPath, state);
+    }
   }
 
   return { pruned: recordedLinks.length - verified.length };

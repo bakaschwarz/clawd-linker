@@ -8,6 +8,7 @@ export interface Package {
 export interface PackageState {
   schemaVersion: number;
   installedIn: Record<string, string[]>;
+  mergedIn?: Record<string, string[]>;
   orderIn?: Record<string, number>;
 }
 
